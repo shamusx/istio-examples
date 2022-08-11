@@ -160,4 +160,4 @@ Log to look for:
 
 ## Summary
 
-We now can have peace of mind that our Istio will not only detect that the Intermediate CA has changed, but the re-issuing of a new CA can be handled by `cert-manager` who can configure external Issuers in a production use case.
+We now can have peace of mind that our Istio will not only detect that the Intermediate CA has changed, but the re-issuing of a new CA is handled `cert-manager` who can configure other Issuers.
