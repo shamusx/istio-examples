@@ -87,7 +87,7 @@ spec:
 EOF
 ```
 
-Note: In Istio Release 1.4.2(https://istio.io/latest/news/releases/1.14.x/announcing-1.14.2/#changes) Istiod digest kubernetes.io/tls type secrets
+Note: In Istio Release 1.4.2(https://istio.io/latest/news/releases/1.14.x/announcing-1.14.2/#changes) Istio can digest kubernetes.io/tls type secrets
 
 ## Setup Istio
 Install Istio and set the environment variable `AUTO_RELOAD_PLUGIN_CERTS=true`
