@@ -1,9 +1,11 @@
 # [Istio] How to enable Plug-In CA Rotation
 
-A common topic when setting up Istio is leveraging existing PKI and the intermediate CA for Istio to sign workload certificates.  But the question comes for short-lived intermediate CA's Istio will need be aware of the change, also fast forward to multiple Istio clusters this will become a handful to manage.
+A common topic when setting up Istio is leveraging existing PKI to create the intermediate signing cert for Istio.  A Tetrate blog post on this very topic was covered: https://www.tetrate.io/blog/istio-trust/.  
+<br>
+The question then comes for short-lived intermediate CA's we want Istio to be aware of the change, also fast forward to the idea of scaling out to multiple Istio clusters this will become a handful to manage.
 <br>
 <br>
-We will make run through how to make Istio aware of changes to Intermediate CA used to sign workload certificates.  As well as have `cert-manager` renew the Intermediate CA before it expires.
+This demo will make run through how to make Istio aware of changes to Intermediate CA used to sign workload certificates.  As well as setup `cert-manager` to renew the Intermediate CA before it expires.
 
 ## Prepare
 What will be needed:
