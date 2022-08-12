@@ -5,7 +5,7 @@ A common topic when setting up Istio is leveraging existing PKI to create the in
 The question then comes for short-lived intermediate CA's we want Istio to be aware of the change, also fast forward to the idea of scaling out to multiple Istio clusters this will become a handful to manage.
 <br>
 <br>
-This demo will make run through how to make Istio aware of changes to Intermediate CA used to sign workload certificates.  As well as setup `cert-manager` to renew the Intermediate CA before it expires.
+This demo will make run through how to make Istio aware of changes to Intermediate CA used to sign workload certificates.  As well as setup `cert-manager` to create a new Intermediate CA before expiration.
 
 ## Prepare
 What will be needed:
