@@ -1,14 +1,14 @@
-# [Istio] How to enable Plug-In CA Rotation
+# [Istio] How to enable Plug-In CA Auto Reload
 
-A common topic when setting up Istio is leveraging existing PKI to create the intermediate signing cert for Istio.  A Tetrate blog post on this very topic was covered: https://www.tetrate.io/blog/istio-trust/.  
+A common topic when setting up Istio is leveraging existing PKI to create the intermediate signing cert for Istio.  A Tetrate blog post on this very topic was covered and recommend checking it out https://www.tetrate.io/blog/istio-trust/.  
 <br>
-The question then comes for short-lived intermediate CA's we want Istio to be aware of the change, also fast forward to the idea of scaling out to multiple Istio clusters this will become a handful to manage.
+The question then comes for short-lived intermediate CA's that get rotated, how can Istio be aware of the update?<br>  It is important to note that by default Istio will not reload a new Intermediate CA until a reboot occurs, which might not sound to bad for a single cluster, but fast forward to the idea of scaling out to multiple clusters where Istio is deployed, this becomes combersome.
 <br>
 <br>
-This demo will make run through how to make Istio aware of changes to Intermediate CA used to sign workload certificates.  As well as setup `cert-manager` to create a new Intermediate CA before expiration.
+This demo will include configuring to be Istio aware of changes to Intermediate CA used to sign workload certificates.  In it `cert-manager` is used to generate the new Intermediate CA as well as rotate it.
 
 ## Prepare
-What will be needed:
+What will be required:
 - Kubernetes Cluster (minikube is also an option)
 - istioctl (version >=1.14.2)
 - cert-manager (https://cert-manager.io/docs/)
@@ -21,7 +21,7 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 ```
 
 2. For simplicity we will setup a selfsigned CA, but with `cert-manager` we could have used an alternate Issuer leveraging existing PKI.
-```
+```bash
 cat << EOF | kubectl apply -f -
 ---
 apiVersion: cert-manager.io/v1
@@ -61,7 +61,7 @@ EOF
 ```
 
 3. Setup the Intermediate CA istio will use to sign workload certificates - with rotation set to occur every 60days(1440h) and renew before 15days(360h) of expiry
-```
+```bash
 kubectl create namespace istio-system
 cat << EOF | kubectl apply -f -
 ---
@@ -89,12 +89,12 @@ spec:
 EOF
 ```
 
-Note: In Istio Release 1.4.2(https://istio.io/latest/news/releases/1.14.x/announcing-1.14.2/#changes) Istio can digest kubernetes.io/tls type secrets
+Note: In Istio Release 1.14.2(https://istio.io/latest/news/releases/1.14.x/announcing-1.14.2/#changes) Istio can digest kubernetes.io/tls type secrets
 
 ## Setup Istio
 Install Istio and set the environment variable `AUTO_RELOAD_PLUGIN_CERTS=true`
 
-```
+```bash
 istioctl operator init
 
 cat << EOF | kubectl apply -f -
@@ -117,7 +117,7 @@ EOF
 ## Intermediate Certificate Rotation
 1. Lets say requirements have changed, previously we set `duration` to 60days(1440h) and it now must rotated every 30days(720h)
 
-```
+```bash
 cat << EOF | kubectl apply -f -
 ---
 apiVersion: cert-manager.io/v1
@@ -150,7 +150,7 @@ k logs -l app=istiod -n istio-system -f
 ```
 
 Log to look for:
-```
+```log
 2022-08-11T20:18:41.493247Z	info	Update Istiod cacerts
 2022-08-11T20:18:41.493483Z	info	Using kubernetes.io/tls secret type for signing ca files
 2022-08-11T20:18:41.716843Z	info	Istiod has detected the newly added intermediate CA and updated its key and certs accordingly
@@ -162,4 +162,4 @@ Log to look for:
 
 ## Summary
 
-We now can have peace of mind that our Istio will not only detect that the Intermediate CA has changed, but the re-issuing of a new CA is handled `cert-manager` who can configure other Issuers.
+We now can have peace of mind that our Istio will not only detect that the Intermediate CA has changed, but the re-issuing of a new CA is automatically handled `cert-manager` who can configure other Issuers.
