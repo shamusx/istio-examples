@@ -12,8 +12,6 @@ What is being done
 - Setup Certmanager to acquire istio intermediate ca
 - Setup istio 
 
-
-
 ## Setup Vault
 
 ### Install Vault with Helm
@@ -22,10 +20,9 @@ What is being done
 helm repo add hashicorp https://helm.releases.hashicorp.com
 helm repo update
 
-# ui.enable -> simple UI for explore
-# ui.serviceType=Laodbalancer -> external IP
-# server.service.type=Loadbalancer -> external IP (cert-manager will use this IP)
-# server.dev.enabled -> demo setup (not recomended for prod)
+# External vault for multi-cluster
+# helm upgrade -i vault hashicorp/vault --set "ui.enabled=true" --set "ui.serviceType=LoadBalancer" --set "server.service.type=LoadBalancer"  --set="server.dev.enabled=true"
+
 helm install vault hashicorp/vault --set="server.dev.enabled=true" -n vault-demo --create-namespace
 ```
 
