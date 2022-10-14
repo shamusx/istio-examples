@@ -26,9 +26,6 @@ helm repo update
 helm install vault hashicorp/vault --set="server.dev.enabled=true" -n vault-demo --create-namespace
 ```
 
-Once install take note of IP for vaul svc(if)
-
-
 ### Configure Vault
 1. Enter the vault shell
 ```bash 
