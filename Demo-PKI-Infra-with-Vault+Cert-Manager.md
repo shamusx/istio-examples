@@ -2,7 +2,7 @@
 
 ## Scenario
 
-Vault will act as the existing PKI infrastructure the cert-manager has to talk to in order to obtain intermediate CA cert for istio to sign workload certs
+Vault will act as the existing PKI infrastructure the cert-manager communicates with in order to obtain intermediate CA cert for istio to sign workload certs
 
 ## Summary
 
